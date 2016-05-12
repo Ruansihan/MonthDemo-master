@@ -1,0 +1,64 @@
+﻿<Page x:Class="MonthDemo.DetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:MonthDemo="clr-namespace:MonthDemo"
+      mc:Ignorable="d" 
+      WindowHeight="600" WindowWidth="600" 
+      d:DesignHeight="600" d:DesignWidth="600"
+      KeepAlive="true"
+	Title="Details">
+
+    <Page.Resources>
+        <MonthDemo:MinuteToHalfHourConverter x:Key="minuteToHalfHourConverter"></MonthDemo:MinuteToHalfHourConverter>
+        <MonthDemo:DayDateConverter x:Key="dayDateConverter"></MonthDemo:DayDateConverter>
+        <MonthDemo:RecordDateConverter x:Key="recordDateConverter"></MonthDemo:RecordDateConverter>
+        <MonthDemo:RecordTypeDescriptionConverter x:Key="typeDescriptionConverter"></MonthDemo:RecordTypeDescriptionConverter>
+        <MonthDemo:ColorConverter x:Key="colorConverter"></MonthDemo:ColorConverter>
+        <Style x:Key="itemStyle" TargetType="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="Background" Value="{Binding Converter={StaticResource colorConverter}}"></Setter>
+        </Style>
+        <DataTemplate x:Key="dateTemplate">
+            <Border BorderBrush="Gray" BorderThickness="0, 0, 0, 2" Margin="2">
+                <TextBlock Text="{Binding Converter={StaticResource recordDateConverter}}"></TextBlock>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="recordTemplate">
+            <Border BorderBrush="Gray" BorderThickness="2">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="120" BorderBrush="Gray" BorderThickness="0, 0, 2, 0">
+                        <TextBlock Text="{Binding Path=Day, Converter={StaticResource dayDateConverter}}"></TextBlock>
+                    </Border>
+                    <Border Width="120" BorderBrush="Gray" BorderThickness="0, 0, 2, 0">
+                        <TextBlock Text="{Binding Path=Minutes, Converter={StaticResource minuteToHalfHourConverter}}"></TextBlock>
+                    </Border>
+                    <Border Width="150" BorderBrush="Gray" BorderThickness="0, 0, 2, 0">
+                        <TextBlock Text="{Binding Path=Type, Converter={StaticResource typeDescriptionConverter}}"></TextBlock>
+                    </Border>
+                    <ListBox ItemsSource="{Binding Path=RecordsOfDay}" ItemTemplate="{StaticResource dateTemplate}"></ListBox>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+            <ComboBox x:Name="combobox" FontSize="15" SelectionChanged="ComboBox_SelectionChanged" Margin="10" Width="150" HorizontalAlignment="Left">
+                <ComboBoxItem IsSelected="true" Tag="{Binding ElementName=combobox, Path=Tag.Records}">全部</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.WorkdayRecords}">工作日</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.WorkdayErrorRecords}">工作日打卡错误</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.OvertimeWorkdayRecords}">漫长工作日</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.ShortWorkdayRecords}">短暂工作日</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.NotWorkdayRecords}">非工作日</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.NotWorkdayErrorRecords}">非工作日打卡错误</ComboBoxItem>
+                <ComboBoxItem Tag="{Binding ElementName=combobox, Path=Tag.AbsenteeismRecords}">缺席</ComboBoxItem>
+            </ComboBox>
+            <ListBox Grid.Row="1" x:Name="list" ItemTemplate="{StaticResource recordTemplate}" ItemContainerStyle="{StaticResource itemStyle}"></ListBox>
+        </Grid>
+</Page>

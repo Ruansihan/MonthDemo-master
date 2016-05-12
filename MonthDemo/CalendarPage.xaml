@@ -1,0 +1,59 @@
+﻿<Page x:Class="MonthDemo.CalendarPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:MonthDemo="clr-namespace:MonthDemo"
+      mc:Ignorable="d" 
+      WindowHeight="600" WindowWidth="600" 
+      d:DesignHeight="600" d:DesignWidth="600"
+      KeepAlive="true"
+    Title="CalendarPage">
+
+    <Page.Resources>
+        <MonthDemo:IsOfNotWorkdaysConverter x:Key="isOfNotWorkdaysConverter"></MonthDemo:IsOfNotWorkdaysConverter>
+        <Style TargetType="CalendarDayButton" x:Key="calendarDayButtonStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},
+                    Path=DataContext, Converter={StaticResource isOfNotWorkdaysConverter},
+                    ConverterParameter={x:Reference calendar1}}" Value="true">
+                    <Setter Property="BorderThickness" Value="2"></Setter>
+                    <Setter Property="BorderBrush" Value="YellowGreen"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="30, 30, 30, 30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="300*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Background="Green" Grid.ColumnSpan="2">
+            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontSize="30">配置工作日</TextBlock>
+        </Border>
+        <Viewbox Grid.Row="1">
+            <MonthDemo:MyCalendar x:Name="calendar1" IsTodayHighlighted="False"
+                      SelectionMode="MultipleRange" CalendarDayButtonStyle="{StaticResource calendarDayButtonStyle}" />
+        </Viewbox>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="10"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Click="markAsWorkdaysClick">标记为工作日</Button>
+                <Button Grid.Column="2" Click="markAsNotWorkdaysClick">标记为非工作日</Button>
+        </Grid>
+        <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" Width="100"
+                   VerticalAlignment="Center" TextAlignment="Center" FontSize="30">
+            <Hyperlink Click="onNextStepClick">下一步</Hyperlink>
+        </TextBlock>
+    </Grid>
+
+</Page>
